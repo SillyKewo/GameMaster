@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<LangVersion>8.0</LangVersion>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+    <None Include="GameSetupConfiguration.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\GamePlayerInterfaces\GamePlayerInterfaces.csproj" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Configurations\Configuration.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Configurations\Configuration.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

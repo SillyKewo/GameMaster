@@ -133,6 +133,7 @@ namespace HexagonalTest
         private void bt_end_Click(object sender, EventArgs e)
         {
             this.board.nextPlayer();
+            
             //set Current player from model
             current_player.BackColor = this.board.getCurrentPlayerColor();
         }

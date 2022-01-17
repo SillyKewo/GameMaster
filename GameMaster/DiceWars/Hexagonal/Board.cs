@@ -25,6 +25,7 @@ namespace Hexagonal
         private List<Player> players = new List<Player>();
         private int[,] textPosX;
         private Hexagonal.BoardState boardState;
+        private int _turn;
 
         // MaHa
         private int[,] textPosY;
@@ -779,34 +780,43 @@ namespace Hexagonal
         /// <summary>
         /// Function to set the Active player to be the next player
         /// </summary>
-        internal void nextPlayer()
+        internal bool nextPlayer()
         {
             Player currentPlayer = this.getPlayerByID(this.BoardState.ActivePlayer);
-
-            int largestPatch = FindLargesPatchForPlayer(currentPlayer);
-            this.distributeDices(currentPlayer, largestPatch);
-            // Console.WriteLine("Dice to distribute: " + largestPatch);
-            // Console.WriteLine("Current Bank " + currentPlayer.Bank);
-
-            BoardState.ActivePlayer = nextActivePlayer(currentPlayer.ID);
-            this.BoardState.ActiveHex = null;
-            currentPlayer = this.getPlayerByID(this.BoardState.ActivePlayer);
-
-            if (currentPlayer.PlayerLogic is UserPlayer)
+            
+            if (this._turn > 0)
             {
-                return;
+                int largestPatch = FindLargesPatchForPlayer(currentPlayer);
+                this.distributeDices(currentPlayer, largestPatch);
+
+                BoardState.ActivePlayer = nextActivePlayer(currentPlayer.ID);
+                currentPlayer = this.getPlayerByID(this.BoardState.ActivePlayer);
+                this.BoardState.ActiveHex = null;
             }
 
-            Console.WriteLine($"{currentPlayer.PlayerLogic.GetType().Name} ({currentPlayer.Fields}) moving...");
-            currentPlayer.PlayerLogic.PlayTurn(this);
-            Console.WriteLine($"{currentPlayer.PlayerLogic.GetType().Name} ({currentPlayer.Fields}) moved.");
-            bool hasWon = this.HasWon(currentPlayer);
-            if (hasWon)
+            this._turn++;
+
+            while (!(currentPlayer.PlayerLogic is UserPlayer))
             {
-                return;
+                Console.WriteLine($"{currentPlayer.PlayerLogic.GetType().Name} ({currentPlayer.Fields}) moving...");
+                currentPlayer.PlayerLogic.PlayTurn(this);
+                Console.WriteLine($"{currentPlayer.PlayerLogic.GetType().Name} ({currentPlayer.Fields}) moved.");
+                bool hasWon = this.HasWon(currentPlayer);
+                if (hasWon)
+                {
+                    return true;
+                }
+
+                int largestPatch = FindLargesPatchForPlayer(currentPlayer);
+                this.distributeDices(currentPlayer, largestPatch);
+
+                BoardState.ActivePlayer = nextActivePlayer(currentPlayer.ID);
+                currentPlayer = this.getPlayerByID(this.BoardState.ActivePlayer);
+                this.BoardState.ActiveHex = null;
+
             }
 
-            this.nextPlayer();
+            return false;
         }
 
         /// <summary>

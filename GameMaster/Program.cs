@@ -94,6 +94,7 @@ namespace GameMaster
                     .build();
 
                 board.nextPlayer();
+
                 Console.WriteLine(board.getCurrentPlayerColor() + " has won!");
 
                 System.Windows.Forms.Application.Run(new Fight(board, sizeOfBoard));

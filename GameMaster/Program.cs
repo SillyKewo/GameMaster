@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Hexagonal;
+using HexagonalTest;
+using HexagonalTest.PlayerAPI;
+using HexagonalTest.Players;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Xml;
 using System.Xml.Serialization;
 using static GameMaster.PlayerInitializationHelper;
@@ -9,8 +13,16 @@ namespace GameMaster
 {
     class Program
     {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
         static void Main(string[] args)
         {
+            AllocConsole();
+
+            // RunDiceWars();
+
             var serializer = new XmlSerializer(typeof(List<GameSetupConfiguration>));
             List<GameSetupConfiguration>? configurations;
 
@@ -52,6 +64,41 @@ namespace GameMaster
 
 
 
+        }
+
+        static void RunDiceWars()
+        {
+            RandomGenerator.getInstance().initialize();
+            
+            bool interactiveGuiMode = false;
+            if (interactiveGuiMode)
+            {
+                Console.WriteLine("Starting Form...");
+
+                System.Windows.Forms.Application.Run(new HexagonalTest.MainWIndow());
+            }
+            else
+            {
+                int sizeOfBoard = 8;
+                var board = new Builder.BoardBuilder()
+                    .witHeight(sizeOfBoard)
+                    .withWidht(sizeOfBoard)
+                    .withSide(25)
+                    .withPlayerLogics(new List<IDiceWarsPlayerLogic>
+                    {
+                        new BlockchainPrepper(),
+                        new AlphaRandom(),
+                        new DeepRandom(),
+                        new QuantumRevenge()
+                    })
+                    .build();
+
+                board.nextPlayer();
+
+                Console.WriteLine(board.getCurrentPlayerColor() + " has won!");
+
+                System.Windows.Forms.Application.Run(new Fight(board, sizeOfBoard));
+            }
         }
     }
 }

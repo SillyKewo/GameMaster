@@ -1,4 +1,5 @@
-﻿using GamePlayerInterfaces;
+﻿using GameMaster.Entities;
+using GamePlayerInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,31 +10,30 @@ namespace GameMaster
 {
     public class TicTacToePlayerWrapper : IGamePlayer
     {
-        private ITicTacToePlayer _player;
-        private readonly string _userString;
+        private ITicTacToePlayer _playerImplementation;
+        private readonly Player _player;
 
-        public TicTacToePlayerWrapper(object player, string user)
+        public TicTacToePlayerWrapper(object playerImplementation, Player player)
         {
-            this._player = player as ITicTacToePlayer;
-            this._userString = user;
-
-            if (this._player is null)
+            if (!(playerImplementation is ITicTacToePlayer playerImplemantationCast))
             {
                 throw new NullReferenceException();
             }
+            this._playerImplementation = playerImplemantationCast;
+            this._player = player;
         }
 
-        public string User => this._userString;
+        public Player Player => this._player;
 
         public void Initialize(bool isStarting)
         {
-            this._player.Initialize(isStarting);
+            this._playerImplementation.Initialize(isStarting);
         }
 
         public Move NextMove(IGameState gameState)
         {
-            var move = this._player.NextMove((int[,])gameState.InternalBoardState);
-            return new Move(move);
+            var move = this._playerImplementation.NextMove((int[,])gameState.InternalBoardState);
+            return new Move(move, this._player);
         }
     }
 }

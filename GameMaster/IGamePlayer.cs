@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameMaster.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace GameMaster
 {
     public interface IGamePlayer
     {
-        public string User { get; }
+        public Player Player { get; }
 
         public Move NextMove(IGameState gameState);
 

@@ -1,4 +1,6 @@
-﻿using Hexagonal;
+﻿using GameMaster.DataAccessLayer;
+using GameMaster.Entities;
+using Hexagonal;
 using HexagonalTest;
 using HexagonalTest.PlayerAPI;
 using HexagonalTest.Players;
@@ -17,6 +19,9 @@ namespace GameMaster
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
 
+        // TODO: Move output folder to configurations.
+        public const string OutputFolder = @"C:\Users\theke\Documents\TicTacToeResults\";
+            
         static void Main(string[] args)
         {
             AllocConsole();
@@ -43,8 +48,8 @@ namespace GameMaster
                 switch (config.GameType)
                 {
                     case GameType.TicTacToe:
-                        List<PlayerActivator> playerActivators = PlayerInitializationHelper.InitializePlayers(config.PlayerFolder, config.GameType);
-                        TournamentManager tournamentManager = new TournamentManager(playerActivators, config.VersusMode, (p1, p2) => new TicTacToeGame(p1, p2));
+                        List<PlayerActivator> playerActivators = InitializePlayers(config.PlayerFolder, config.GameType);
+                        TournamentManager tournamentManager = new TournamentManager(playerActivators, config, (p, s) => TicTacToeGame.Create(p, s));
                         tournamentManagers.Add(tournamentManager);
 
                         break;
@@ -55,14 +60,16 @@ namespace GameMaster
                 }
             }
 
-
+            List<TournamentResult> results = new List<TournamentResult>();
             foreach (var tournament in tournamentManagers)
             {
-                var res = tournament.StartTournament();
+                results.Add(tournament.PlayTournament());
             }
-            
 
 
+            TournamentResultDataMapperXml dataMapper = new TournamentResultDataMapperXml(OutputFolder);
+
+            dataMapper.SaveTournamentsForDate(results, DateTime.UtcNow);
 
         }
 

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using GameMaster.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static GameMaster.PlayerInitializationHelper;
 
@@ -10,45 +10,63 @@ namespace GameMaster
     public class TournamentManager
     {
         private List<PlayerActivator> _playerActivators;
-        private VersusMode _mode;
-        private Func<IGamePlayer, IGamePlayer, IGame> _gameCreator;
+        private GameSetupConfiguration _config;
+        private Func<List<IGamePlayer>, int, IGame> _gameCreator;
+        private object _lock = new object();
 
-        public TournamentManager(List<PlayerActivator> playerActivators, VersusMode versusMode, Func<IGamePlayer, IGamePlayer, IGame> gameCreator)
+        public TournamentManager(List<PlayerActivator> playerActivators, GameSetupConfiguration config, Func<List<IGamePlayer>, int, IGame> gameCreator)
         {
             this._playerActivators = playerActivators;
-            this._mode = versusMode;
+            this._config = config;
             this._gameCreator = gameCreator;
         }
 
 
-        public List<string> StartTournament()
+        public TournamentResult PlayTournament()
         {
-            var games = CreateGames();
-            List<string> results = new List<string>();
-            foreach (IGame game in games)
+            List<Match> matches = CreateMatches();
+            List<MatchResult> matchResults = new List<MatchResult>();
+            Parallel.ForEach(matches, match =>
             {
-                GameManager manager = new GameManager(game);
+                List<GameResult> gameResults = new List<GameResult>();
+                foreach (IGame game in match.Games)
+                {
+                    GameManager manager = new GameManager(game, this._config.TimeOutSec);
 
-                manager.Play();
+                    gameResults.Add(manager.Play());
+                }
 
-                results.Add(manager.GetResult());
-            }
+                lock (this._lock)
+                {
+                    matchResults.Add(new MatchResult(gameResults));
+                }
+            });
 
-            return results;
+            return new TournamentResult(matchResults, DateTime.UtcNow, this._config.GameType);
         }
 
 
-        private List<IGame> CreateGames()
+        private List<Match> CreateMatches()
         {
-            List<IGame> games = new List<IGame>();
-            switch (this._mode)
+            List<Match> matches = new List<Match>();
+            switch (this._config.VersusMode)
             {
                 case VersusMode.RoundRobin:
                     for (int i = 0; i < this._playerActivators.Count - 1; i++)
                     {
                         for (int j = i+1; j < this._playerActivators.Count; j++)
                         {
-                            games.Add(this._gameCreator(this._playerActivators[i].CreateNewPlayer(), this._playerActivators[j].CreateNewPlayer()));
+                            // TODO: Implement possibility of more players than 2 per game!
+                            List<IGamePlayer> gamePlayers = new List<IGamePlayer>() { this._playerActivators[i].CreateNewPlayer(), this._playerActivators[j].CreateNewPlayer() };
+
+                            List<IGame> games = new List<IGame>();
+
+                            for (int k = 0; k < this._config.RoundsPerMatch; k++)
+                            {
+                                int startPlayer = k % gamePlayers.Count;
+                                games.Add(this._gameCreator(gamePlayers, startPlayer));
+                            }
+                            matches.Add(new Match(games));
                         }
                     }
                     break;
@@ -56,7 +74,7 @@ namespace GameMaster
                     break;
             }
 
-            return games;
+            return matches;
         }
 
     }

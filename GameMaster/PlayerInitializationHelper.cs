@@ -1,4 +1,5 @@
-﻿using GamePlayerInterfaces;
+﻿using GameMaster.Entities;
+using GamePlayerInterfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,7 +61,7 @@ namespace GameMaster
                 Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(dllFiles[0]);
                 PlayerActivator playerActivator;
 
-                playerActivator = new PlayerActivator(assembly, gameType.GetPlayerType(), user, (o, s) => new TicTacToePlayerWrapper(o, s));
+                playerActivator = new PlayerActivator(assembly, gameType.GetPlayerType(), user, (o, s) => new TicTacToePlayerWrapper(o, new Player(s)));
 
 
 

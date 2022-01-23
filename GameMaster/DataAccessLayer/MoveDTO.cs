@@ -4,15 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameMaster
+namespace GameMaster.DataAccessLayer
 {
-    public class Move
+    public class MoveDTO
     {
-        public Move(List<int> commands)
-        {
-            this.Commands = commands;
-        }
-
+        public string Player { get; set; }
         public List<int> Commands { get; set; }
     }
 }

@@ -3,5 +3,8 @@
 	<GameSetupConfiguration>
 		<GameType>TicTacToe</GameType>
 		<PlayerFolder>C:\Users\theke\Documents\playersTicTacToe</PlayerFolder>
+		<RoundsPerMatch>2</RoundsPerMatch>
+		<VersusMode>RoundRobin</VersusMode>
+		<TimeOutSec>1</TimeOutSec>
 	</GameSetupConfiguration>
 </ArrayOfGameSetupConfiguration>

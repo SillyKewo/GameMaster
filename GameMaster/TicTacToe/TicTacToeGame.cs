@@ -13,18 +13,21 @@ namespace GameMaster
 
         private int currentPlayer = 0;
         private List<IGamePlayer> _players;
+        private readonly int _initialPlayerIndex;
         private BoardState? _gameState;
 
 
-        public TicTacToeGame(IGamePlayer player1, IGamePlayer player2)
+        private TicTacToeGame(IGamePlayer player1, IGamePlayer player2, int initialPlayer)
         {
             this._player1 = player1;
             this._player2 = player2;
             this._players = new List<IGamePlayer>() { player1, player2 };
+            this._initialPlayerIndex = initialPlayer;
+            this.currentPlayer = initialPlayer;
         }
 
 
-        public string Description => $"Tic-Tac-Toe game: Player1 ({this._player1.User}) vs Player2 ({this._player2.User})";
+        public string Description => $"Tic-Tac-Toe game: Player1 ({this._player1.Player.Name}) vs Player2 ({this._player2.Player.Name})";
 
         public bool IsDone { get
             {
@@ -57,8 +60,8 @@ namespace GameMaster
         public void Initialize()
         {
             this._gameState = BoardState.Create();
-            this._player1.Initialize(true);
-            this._player2.Initialize(false);
+            this._player1.Initialize(this._initialPlayerIndex == 0);
+            this._player2.Initialize(this._initialPlayerIndex == 1);
         }
 
         public IGameState GetGameState()
@@ -80,7 +83,7 @@ namespace GameMaster
 
             if (move.Commands.Count > 1)
             {
-                if (gamePlayer.User == this._player1.User)
+                if (gamePlayer.Player == this._player1.Player)
                 {
                     this._gameState.PlaceMove((move.Commands[0], move.Commands[1]), 1);
                 }
@@ -101,6 +104,16 @@ namespace GameMaster
         {
             IGamePlayer currentPlayer = this.Players[this.currentPlayer];
             return currentPlayer;
+        }
+
+        public static TicTacToeGame Create(List<IGamePlayer> players, int startPlayerIndex)
+        {
+            if (players.Count != 2)
+            {
+                throw new InvalidOperationException($"{typeof(TicTacToeGame).Name} requires exactly 2 players!");
+            }
+
+            return new TicTacToeGame(players[0], players[1], startPlayerIndex);
         }
 
         public class BoardState : IGameState

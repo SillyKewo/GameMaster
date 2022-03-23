@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace GameMaster
 {
+    /// <summary>
+    /// Collection of versus modes supported.
+    /// </summary>
     public enum VersusMode
     {
         RoundRobin = 0

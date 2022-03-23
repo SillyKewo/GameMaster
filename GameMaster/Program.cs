@@ -28,6 +28,7 @@ namespace GameMaster
 
             // RunDiceWars();
 
+            // Read the current tournament configurations.
             var serializer = new XmlSerializer(typeof(List<GameSetupConfiguration>));
             List<GameSetupConfiguration>? configurations;
 
@@ -41,6 +42,7 @@ namespace GameMaster
                 throw new NullReferenceException($"configurations couldn't be parsed!");
             }
 
+            // Create a tournament manager for each game type.
             List<TournamentManager> tournamentManagers = new List<TournamentManager>();
 
             foreach (var config in configurations)
@@ -60,6 +62,7 @@ namespace GameMaster
                 }
             }
 
+            // Play each tournament.
             List<TournamentResult> results = new List<TournamentResult>();
             foreach (var tournament in tournamentManagers)
             {
@@ -67,8 +70,8 @@ namespace GameMaster
             }
 
 
+            // Save the results.
             TournamentResultDataMapperXml dataMapper = new TournamentResultDataMapperXml(OutputFolder);
-
             dataMapper.SaveTournamentsForDate(results, DateTime.UtcNow);
 
         }

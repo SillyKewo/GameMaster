@@ -6,17 +6,33 @@ using System.Threading.Tasks;
 
 namespace GameMaster
 {
+    /// <summary>
+    /// The class responsible for simulating a single game and report results.
+    /// </summary>
     public class GameManager
     {
         private readonly int _timeOutSec;
+
+        /// <summary>
+        /// Initializes the <see cref="GameManager"/> instance
+        /// </summary>
+        /// <param name="game">The game to be managed</param>
+        /// <param name="timeOutSec">Move time out.</param>
         public GameManager(IGame game, int timeOutSec)
         {
             this.Game = game;
             this._timeOutSec = timeOutSec;
         }
 
+        /// <summary>
+        /// Gets the game managed by the instance
+        /// </summary>
         public IGame Game { get; }
 
+        /// <summary>
+        /// Plays out the game.
+        /// </summary>
+        /// <returns>Returns a <see cref="GameResult"/> instance</returns>
         public GameResult Play()
         {
             this.Game.Initialize();
@@ -58,10 +74,20 @@ namespace GameMaster
 
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the game has been played to completion.
+        /// </summary>
         public bool IsDone => this.Game.IsDone || this.TimedOutPlayer != null;
 
+        /// <summary>
+        /// Gets the possibly null player that timed out, if any.
+        /// </summary>
         public Player? TimedOutPlayer { get; private set; }  
 
+        /// <summary>
+        /// Gets the result as a string representation.
+        /// </summary>
+        /// <returns></returns>
         public string GetResult()
         {
             IGamePlayer? gamePlayer = this.Game.GetWinner();

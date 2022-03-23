@@ -13,6 +13,9 @@ namespace GameMaster
 {
     public static class PlayerInitializationHelper
     {
+        /// <summary>
+        /// Activator class for creating <see cref="IGamePlayer"/> instances
+        /// </summary>
         public class PlayerActivator
         {
             private Assembly _assembly;
@@ -59,11 +62,12 @@ namespace GameMaster
                 var dllFiles = Directory.GetFiles(dir);
 
                 Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(dllFiles[0]);
-                PlayerActivator playerActivator;
-
-                playerActivator = new PlayerActivator(assembly, gameType.GetPlayerType(), user, (o, s) => new TicTacToePlayerWrapper(o, new Player(s)));
-
-
+                PlayerActivator playerActivator = gameType switch
+                {
+                    GameType.TicTacToe => new PlayerActivator(assembly, gameType.GetPlayerType(), user, (o, s) => new TicTacToePlayerWrapper(o, new Player(s))),
+                    GameType.RockPaperScissors => throw new NotImplementedException(),
+                    _ => throw new NotImplementedException()
+                };
 
                 playerActivators.Add(playerActivator);
             }

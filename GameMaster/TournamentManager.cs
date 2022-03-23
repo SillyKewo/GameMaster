@@ -7,6 +7,10 @@ using static GameMaster.PlayerInitializationHelper;
 
 namespace GameMaster
 {
+    /// <summary>
+    /// Manager responsible for simulating a tournament, tournaments consist of collection of <see cref="Match"/>es, which each may have one or more <see cref="IGame"/>s.
+    /// Each tournament is tied to a specific game type.
+    /// </summary>
     public class TournamentManager
     {
         private List<PlayerActivator> _playerActivators;
@@ -21,7 +25,10 @@ namespace GameMaster
             this._gameCreator = gameCreator;
         }
 
-
+        /// <summary>
+        /// Plays out the tournament.
+        /// </summary>
+        /// <returns>the <see cref="TournamentResult"/>.</returns>
         public TournamentResult PlayTournament()
         {
             List<Match> matches = CreateMatches();
@@ -44,7 +51,6 @@ namespace GameMaster
 
             return new TournamentResult(matchResults, DateTime.UtcNow, this._config.GameType);
         }
-
 
         private List<Match> CreateMatches()
         {

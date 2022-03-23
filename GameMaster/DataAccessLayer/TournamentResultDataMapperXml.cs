@@ -27,7 +27,7 @@ namespace GameMaster.DataAccessLayer
 
         public void SaveTournamentsForDate(List<TournamentResult> results, DateTime date)
         {
-            string outFileName = date.Date.ToOADate() + Prefix;
+            string outFileName = date.Date.ToShortDateString() + Prefix;
 
             List<TournamentResultDTO> dateResults;
 
@@ -56,7 +56,7 @@ namespace GameMaster.DataAccessLayer
         public bool TryGetTournamentsForDate(DateTime date, [NotNullWhen(true)] out List<TournamentResult>? tournamentResults)
         {
             tournamentResults = null;
-            string outFileName = date.Date.ToShortTimeString() + Prefix;
+            string outFileName = date.Date.ToShortDateString() + Prefix;
 
             using (var reader = XmlReader.Create(this._outputFolder + outFileName))
             {

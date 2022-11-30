@@ -33,7 +33,7 @@ namespace GameMaster
         public Move NextMove(IGameState gameState)
         {
             var move = this._playerImplementation.NextMove((int[,])gameState.InternalBoardState);
-            return new Move(move, this._player);
+            return new Move(move.Select(c => (float)c).ToList(), this._player);
         }
     }
 }

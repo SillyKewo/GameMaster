@@ -85,11 +85,11 @@ namespace GameMaster
             {
                 if (gamePlayer.Player == this._player1.Player)
                 {
-                    this._gameState.PlaceMove((move.Commands[0], move.Commands[1]), 1);
+                    this._gameState.PlaceMove(((int)move.Commands[0], (int)move.Commands[1]), 1);
                 }
                 else
                 {
-                    this._gameState.PlaceMove((move.Commands[0], move.Commands[1]), 2);
+                    this._gameState.PlaceMove(((int)move.Commands[0], (int)move.Commands[1]), 2);
                 }
             }
             else

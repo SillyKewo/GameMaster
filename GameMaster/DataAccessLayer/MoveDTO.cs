@@ -9,6 +9,6 @@ namespace GameMaster.DataAccessLayer
     public class MoveDTO
     {
         public string Player { get; set; }
-        public List<int> Commands { get; set; }
+        public List<float> Commands { get; set; }
     }
 }

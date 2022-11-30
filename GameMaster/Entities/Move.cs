@@ -9,13 +9,13 @@ namespace GameMaster
 {
     public class Move
     {
-        public Move(List<int> commands, Player player )
+        public Move(List<float> commands, Player player )
         {
             this.Commands = commands;
             this.Player = player;
         }
 
-        public List<int> Commands { get; set; }
+        public List<float> Commands { get; set; }
 
         public Player Player { get; set; }
     }

@@ -62,7 +62,7 @@ namespace GameMaster
                     {
                         for (int j = i+1; j < this._playerActivators.Count; j++)
                         {
-                            // TODO: Implement possibility of more players than 2 per game!
+                            // TODO: Implement possibility of more than players than 2 per game!
                             List<IGamePlayer> gamePlayers = new List<IGamePlayer>() { this._playerActivators[i].CreateNewPlayer(), this._playerActivators[j].CreateNewPlayer() };
 
                             List<IGame> games = new List<IGame>();

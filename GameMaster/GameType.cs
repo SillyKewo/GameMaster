@@ -9,7 +9,8 @@ namespace GameMaster
     public enum GameType
     {
         TicTacToe = 0,
-        RockPaperScissors = 1 
+        RockPaperScissors = 1,
+        DodgeBall = 2,
     }
 
     /// <summary>
@@ -27,6 +28,7 @@ namespace GameMaster
             return o switch
             {
                 GameType.TicTacToe => typeof(ITicTacToePlayer),
+                GameType.DodgeBall => typeof(IDodgeBallPlayer),
                 _ => throw new NotImplementedException(),
             };
         }

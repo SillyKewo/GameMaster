@@ -47,14 +47,19 @@ namespace GameMaster
 
             foreach (var config in configurations)
             {
+                List<PlayerActivator> playerActivators = InitializePlayers(config.PlayerFolder, config.GameType);
                 switch (config.GameType)
                 {
                     case GameType.TicTacToe:
-                        List<PlayerActivator> playerActivators = InitializePlayers(config.PlayerFolder, config.GameType);
                         TournamentManager tournamentManager = new TournamentManager(playerActivators, config, (p, s) => TicTacToeGame.Create(p, s));
                         tournamentManagers.Add(tournamentManager);
-
                         break;
+
+                    case GameType.DodgeBall:
+                        TournamentManager dodgeBallTournament = new TournamentManager(playerActivators, config, (p, s) => new DodgeBallGame(p, s));
+                        tournamentManagers.Add(dodgeBallTournament);
+                        break;
+
                     case GameType.RockPaperScissors:
                         break;
                     default:

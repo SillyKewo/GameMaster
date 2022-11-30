@@ -1,4 +1,5 @@
-﻿using GameMaster.Entities;
+﻿using GameMaster.Dodgeball;
+using GameMaster.Entities;
 using GamePlayerInterfaces;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,7 @@ namespace GameMaster
                 PlayerActivator playerActivator = gameType switch
                 {
                     GameType.TicTacToe => new PlayerActivator(assembly, gameType.GetPlayerType(), user, (o, s) => new TicTacToePlayerWrapper(o, new Player(s))),
+                    GameType.DodgeBall => new PlayerActivator(assembly, gameType.GetPlayerType(), user, (o, s) => new DodgeBallPlayerWrapper(o, new Player(s))),
                     GameType.RockPaperScissors => throw new NotImplementedException(),
                     _ => throw new NotImplementedException()
                 };

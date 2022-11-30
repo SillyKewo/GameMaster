@@ -14,5 +14,7 @@ namespace GameMaster.DataAccessLayer
         public DateTime DateTime { get; set; }
 
         public GameType GameType { get; set; }
+
+        public VersusMode VersusMode { get; set; }
     }
 }

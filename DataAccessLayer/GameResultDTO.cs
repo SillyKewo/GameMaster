@@ -10,10 +10,14 @@ namespace GameMaster.DataAccessLayer
     {
         public List<MoveDTO> Moves { get; set; }
 
-        public string? Player { get; set; }
+        public string? ConditionPlayer { get; set; }
+
+        public List<string> Players { get; set; }
 
         public bool TimedOut { get; set; }
 
         public bool HasWinner { get; set; }
+
+        public List<float>? Scores { get; set; }
     }
 }

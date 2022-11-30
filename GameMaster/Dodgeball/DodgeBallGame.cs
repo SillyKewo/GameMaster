@@ -112,6 +112,11 @@ namespace GameMaster
             return new DodgeBallGameState(positions, currentPlayer, hasBall, this._dodgeBallPositions);
         }
 
+        public List<float>? GetScores()
+        {
+            return null;
+        }
+
         internal class DodgeBallGameState : IDodgeBallGameState, IGameState
         {
             private List<(int Player, Vector2 Position)> _playerPositions;

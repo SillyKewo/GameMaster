@@ -15,7 +15,7 @@ namespace Entities
             TimeOut
         }
 
-        private GameResult(List<Player> players, List<Move> moves, ResultCondition condition, Player? resultPlayer)
+        private GameResult(List<Player> players, List<Move> moves, ResultCondition condition, Player? resultPlayer, List<float>? scores)
         {
             if (condition == ResultCondition.Draw && resultPlayer != null)
             {
@@ -31,6 +31,7 @@ namespace Entities
             this.Moves = moves;
             this.GameResultCondition = condition;
             this.ResultConditionPlayer = resultPlayer;
+            this.Scores = scores;
         }
 
         public List<Player> Players { get; }
@@ -43,19 +44,21 @@ namespace Entities
 
         public Player? ResultConditionPlayer { get; }
 
-        public static GameResult CreateDrawResult(List<Player> players, List<Move> moves)
+        public List<float>? Scores { get; }
+
+        public static GameResult CreateDrawResult(List<Player> players, List<Move> moves, List<float>? scores)
         {
-            return new GameResult(players, moves, ResultCondition.Draw, null);
+            return new GameResult(players, moves, ResultCondition.Draw, null, scores);
         }
 
-        public static GameResult CreateResult(List<Player> players, List<Move> moves, Player winner)
+        public static GameResult CreateResult(List<Player> players, List<Move> moves, Player winner, List<float>? scores)
         {
-            return new GameResult(players, moves, ResultCondition.Normal, winner);
+            return new GameResult(players, moves, ResultCondition.Normal, winner, scores);
         }
 
-        public static GameResult CreateTimedOutResult(List<Player> players, List<Move> moves, Player timedOut)
+        public static GameResult CreateTimedOutResult(List<Player> players, List<Move> moves, Player timedOut, List<float>? scores)
         {
-            return new GameResult(players, moves, ResultCondition.TimeOut, timedOut);
+            return new GameResult(players, moves, ResultCondition.TimeOut, timedOut, scores);
         }
 
         public string ResultDescription()
@@ -71,6 +74,16 @@ namespace Entities
 
             sb.AppendLine();
             sb.AppendLine($"Total number of moves: {this.Moves.Count}");
+
+            if (this.Scores is not null && this.Scores.Any())
+            {
+                sb.AppendLine();
+                sb.AppendLine($"Final score per player:");
+                foreach ((Player player, float score) in this.Players.Zip(this.Scores).OrderByDescending(ps => ps.Second))
+                {
+                    sb.AppendLine($"\t{player.Name}:{score}");
+                }
+            }
 
             return sb.ToString();
         }

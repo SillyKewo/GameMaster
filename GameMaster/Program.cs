@@ -20,7 +20,7 @@ namespace GameMaster
         static extern bool AllocConsole();
 
         // TODO: Move output folder to configurations.
-        public const string OutputFolder = @"C:\Users\theke\Documents\TicTacToeResults\";
+        public const string OutputFolder = @"C:\Users\theke\Documents\GameMaster\Output\";
             
         static void Main(string[] args)
         {

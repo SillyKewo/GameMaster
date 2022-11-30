@@ -45,8 +45,8 @@ namespace GameMaster.DataAccessLayer
             }
 
             dateResults.AddRange(results.Select(r => this.ConvertToDTO(r)));
-
-            using (var writer = XmlWriter.Create(this._outputFolder + outFileName))
+            var settings = new XmlWriterSettings() { Indent = true, NewLineOnAttributes = true };
+            using (var writer = XmlWriter.Create(this._outputFolder + outFileName, settings))
             {
                 this._serializer.Serialize(writer, dateResults);
             }
@@ -71,6 +71,28 @@ namespace GameMaster.DataAccessLayer
             return tournamentResults != null;
         }
 
+        public List<TournamentResult> GetAllTournamentResults()
+        {
+            List<TournamentResult> results = new List<TournamentResult>();
+
+            string[] files = Directory.GetFiles(this._outputFolder);
+
+            foreach (string filePath in files)
+            {
+                using (var reader = XmlReader.Create(filePath))
+                {
+                    var tournamentResultsDTOs = (List<TournamentResultDTO>?)this._serializer.Deserialize(reader);
+
+                    if (tournamentResultsDTOs != null && tournamentResultsDTOs.Any())
+                    {
+                        results.AddRange(tournamentResultsDTOs.Select(t => this.ConvertFromDTO(t)).ToList());
+                    }
+                }
+            }
+
+            return results;
+        }
+
         private TournamentResultDTO ConvertToDTO(TournamentResult tournamentResult)
         {
             List<MatchResultDTO> matchResultDTOs = new List<MatchResultDTO>();
@@ -85,8 +107,10 @@ namespace GameMaster.DataAccessLayer
                     {
                         Moves = moveDTO,
                         HasWinner = gameResult.HasWinner,
-                        Player = gameResult.ResultConditionPlayer?.Name,
-                        TimedOut = gameResult.GameResultCondition == GameResult.ResultCondition.TimeOut
+                        ConditionPlayer = gameResult.ResultConditionPlayer?.Name,
+                        Players = gameResult.Players.Select(p => p.Name).ToList(),
+                        TimedOut = gameResult.GameResultCondition == GameResult.ResultCondition.TimeOut,
+                        Scores = gameResult.Scores
                     });
 
                 }
@@ -102,13 +126,37 @@ namespace GameMaster.DataAccessLayer
             {
                 DateTime = tournamentResult.TournamentHeldAt,
                 MatchResults = matchResultDTOs,
-                GameType = tournamentResult.GameType
+                GameType = tournamentResult.GameType,
+                VersusMode = tournamentResult.VersusMode
             };
         }
 
         private TournamentResult ConvertFromDTO(TournamentResultDTO tournamentResultDTO)
         {
-            throw new NotImplementedException();
+            List<MatchResult> matchResults = new List<MatchResult>();
+            foreach (var matchResultDTO in tournamentResultDTO.MatchResults)
+            {
+                List<GameResult> gameResults = new List<GameResult>();
+                foreach (var gameResultDto in matchResultDTO.GameResults)
+                {
+                    var players = gameResultDto.Players.Select(p => new Player(p)).ToList();
+                    var moves = gameResultDto.Moves.Select(m => new Move(m.Commands, players.First(p => p.Name == m.Player))).ToList();
+                    var gameResult = gameResultDto switch
+                    {
+                        _ when gameResultDto.TimedOut && gameResultDto.ConditionPlayer is not null => GameResult.CreateTimedOutResult(players, moves, players.First(p => p.Name == gameResultDto.ConditionPlayer), gameResultDto.Scores),
+                        _ when gameResultDto.HasWinner && gameResultDto.ConditionPlayer is not null => GameResult.CreateResult(players, moves, players.First(p => p.Name == gameResultDto.ConditionPlayer), gameResultDto.Scores),
+                        _ when !gameResultDto.HasWinner => GameResult.CreateDrawResult(players, moves, gameResultDto.Scores),
+                        _ => throw new InvalidOperationException("Unexpected game result DTO")
+                    };
+                    
+                    gameResults.Add(gameResult);
+
+                }
+
+                matchResults.Add(new MatchResult(gameResults));
+            }
+
+            return new TournamentResult(matchResults, tournamentResultDTO.DateTime, tournamentResultDTO.GameType, tournamentResultDTO.VersusMode);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace GameMaster
                 }
             });
 
-            return new TournamentResult(matchResults, DateTime.UtcNow, this._config.GameType);
+            return new TournamentResult(matchResults, DateTime.UtcNow, this._config.GameType, this._config.VersusMode);
         }
 
         private List<Match> CreateMatches()

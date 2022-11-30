@@ -117,6 +117,11 @@ namespace GameMaster
             return new TicTacToeGame(players[0], players[1], startPlayerIndex);
         }
 
+        public List<float>? GetScores()
+        {
+            return null;
+        }
+
         public class BoardState : IGameState
         {
             private int[,] _board;

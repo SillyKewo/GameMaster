@@ -59,17 +59,17 @@ namespace GameMaster
 
             if (this.TimedOutPlayer != null)
             {
-                return GameResult.CreateTimedOutResult(this.Game.Players.Select(gp => gp.Player).ToList(), moves, this.TimedOutPlayer);
+                return GameResult.CreateTimedOutResult(this.Game.Players.Select(gp => gp.Player).ToList(), moves, this.TimedOutPlayer, this.Game.GetScores());
             }
 
             IGamePlayer? winner = this.Game.GetWinner();
             if (winner == null) 
             {
-                return GameResult.CreateDrawResult(this.Game.Players.Select(gp => gp.Player).ToList(), moves);
+                return GameResult.CreateDrawResult(this.Game.Players.Select(gp => gp.Player).ToList(), moves, this.Game.GetScores());
             }
             else
             {
-                return GameResult.CreateResult(this.Game.Players.Select(gp => gp.Player).ToList(), moves, winner.Player);
+                return GameResult.CreateResult(this.Game.Players.Select(gp => gp.Player).ToList(), moves, winner.Player, this.Game.GetScores());
             }
 
         }

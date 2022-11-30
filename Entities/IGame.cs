@@ -56,5 +56,11 @@ namespace Entities
         /// </summary>
         /// <returns>The <see cref="IGamePlayer"/> to place a move.</returns>
         public IGamePlayer NextPlayer();
+
+        /// <summary>
+        /// Gets the scores for each player if any, else null
+        /// </summary>
+        /// <returns>The possible null collection of scores, in same ordering as <see cref="Players"/>.</returns>
+        public List<float>? GetScores();
     }
 }

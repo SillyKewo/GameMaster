@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
 	<UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
@@ -25,6 +25,8 @@
 
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
+	  <ProjectReference Include="..\Entities\Entities.csproj" />
 	  <ProjectReference Include="..\GamePlayerInterfaces\GamePlayerInterfaces.csproj" />
 	</ItemGroup>
 
@@ -40,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="DiceWars\Gui\" />
+    <Folder Include="Entities\" />
   </ItemGroup>
 
 </Project>

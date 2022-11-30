@@ -1,5 +1,5 @@
-﻿using GameMaster.Dodgeball;
-using GameMaster.Entities;
+﻿using Entities;
+using GameMaster.Dodgeball;
 using GamePlayerInterfaces;
 using System;
 using System.Collections.Generic;

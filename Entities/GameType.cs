@@ -1,7 +1,7 @@
 ﻿using GamePlayerInterfaces;
 using System;
 
-namespace GameMaster
+namespace Entities
 {
     /// <summary>
     /// The collection of game types supported.

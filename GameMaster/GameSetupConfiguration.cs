@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Entities;
+using System.Collections.Generic;
 
 namespace GameMaster
 {

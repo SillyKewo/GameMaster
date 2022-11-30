@@ -1,5 +1,5 @@
-﻿using GameMaster.DataAccessLayer;
-using GameMaster.Entities;
+﻿using Entities;
+using GameMaster.DataAccessLayer;
 using Hexagonal;
 using HexagonalTest;
 using HexagonalTest.PlayerAPI;

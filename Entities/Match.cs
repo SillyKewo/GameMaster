@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GameMaster.Entities
+namespace Entities
 {
     public class Match
     {

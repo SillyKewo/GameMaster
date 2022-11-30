@@ -1,4 +1,4 @@
-﻿using GameMaster.Entities;
+﻿using Entities;
 using GamePlayerInterfaces;
 using System;
 using System.Collections.Generic;

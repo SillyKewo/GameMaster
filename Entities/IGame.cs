@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameMaster
+namespace Entities
 {
     /// <summary>
     /// A game that can be played between a collection of <see cref="IGamePlayer"/>

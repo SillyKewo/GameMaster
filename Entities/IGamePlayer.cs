@@ -1,4 +1,6 @@
-﻿namespace Entities
+﻿using System.Diagnostics;
+
+namespace Entities
 {
     /// <summary>
     /// A player representation that can place moves.

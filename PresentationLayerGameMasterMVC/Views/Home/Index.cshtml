@@ -1,0 +1,83 @@
+﻿@using Entities;
+@model IEnumerable<TournamentResult>
+@{
+    ViewData["Title"] = "Overview";
+}
+
+@{
+    var gametypes = Model.Select(t => t.GameType).Distinct().ToList();
+    var players = Model.SelectMany(t => t.PlayerList).Distinct().ToList();
+}
+
+ <style type="text/css">
+    form {
+        position: relative;
+        padding: 2em;
+    }
+
+    input {
+        float: left;
+        clear: both;
+    }
+
+    table {
+        border: 2px solid black
+    }
+</style>
+
+
+
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to tournament overview</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get, new { }))
+{
+    <table cellpadding="5" cellspacing="1">
+        <tr>
+            <th colspan="5" align="center">Tournament filtering</th>
+        </tr>
+        <tr>
+            <td>GameType: </td>
+            <td>
+                @Html.DropDownList("GameType", gametypes.Select(g => new SelectListItem(g.ToString(), g.ToString())), "All")
+            </td>
+            <td>From: </td>
+            <td>
+                @Html.Editor("From", "date", new { htmlAttributes = new { @class = "form-control datepicker" } })
+            </td>
+            <td>To:</td>
+            <td>
+                @Html.Editor("To", "date", new { htmlAttributes = new { @class = "form-control datepicker" } })
+            </td>
+            <td>Player:</td>
+            <td>
+                @Html.DropDownList("RequiredPlayer", players.Select(p => new SelectListItem(p.Name, p.Name)), "All")
+            </td>
+        </tr>
+    </table>
+    <div>
+        <input type="submit" value="Filter" />
+    </div>
+}
+
+
+<div>
+
+        @foreach (TournamentResult tournamentResult in Model)
+        {
+
+            var playerNames = tournamentResult.PlayerList.Select(p => p.Name);
+
+        <div style="padding: 2em; border:1px solid black; ">
+            <h3 class="link-primary">@Html.ActionLink($"{tournamentResult.GameType} Tournament", "Details", "Tournament", new { dateTimeTicks = tournamentResult.TournamentHeldAt.Ticks }, null)</h3>
+                <span>Tournament was held at: @tournamentResult.TournamentHeldAt</span>
+                <br>
+            <span>Participants: @string.Join(", ", playerNames)</span>
+            </div>
+
+        }
+</div>

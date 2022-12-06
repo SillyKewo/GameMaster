@@ -1,0 +1,42 @@
+﻿@model PlayerDetailsModel
+@{
+    ViewData["Title"] = "Player Overview";
+}
+
+<div>
+    <h1>Player: @Model.Player.Name</h1>
+</div>
+
+<div>
+    <h3>Overall stats:</h3>
+    <p>Tournaments participated in: @Model.OverallStatics.TournamentParticipatedIn</p>
+    <p>Matches participated in: @Model.OverallStatics.MatchesParticipatedIn</p>
+
+    <p>Win Ratio: @Model.OverallStatics.MatchWinRatioPercentage</p>
+    <p>Draw Ratio: @Model.OverallStatics.MatchWinRatioPercentage</p>
+</div>
+
+
+<h2>Statistics per game type</h2>
+@foreach (var gameTypeStats in Model.GameTypeStatistics)
+{
+    <div>
+        <h4>GameType: @gameTypeStats.Item1.ToString()</h4>
+        <p>Tournaments participated in: @gameTypeStats.Item2.TournamentParticipatedIn</p>
+        <p>Matches participated in: @gameTypeStats.Item2.MatchesParticipatedIn</p>
+        <p>Win Ratio: @gameTypeStats.Item2.MatchWinRatioPercentage</p>
+        <p>Draw Ratio: @gameTypeStats.Item2.MatchWinRatioPercentage</p>
+    </div>
+
+}
+
+<div>
+    <h2>Last tournaments played in:</h2>
+    @foreach (var tournament in Model.LatestTournaments)
+    {
+        <div>
+            <p>@Html.ActionLink($"{tournament.GameType} Tournament", "Details", "Tournament", new { dateTimeTicks = tournament.TournamentHeldAt.Ticks }, null)</p>
+            <p>Held at: @tournament.TournamentHeldAt</p>
+        </div>
+    }
+</div>

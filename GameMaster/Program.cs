@@ -6,6 +6,7 @@ using HexagonalTest.PlayerAPI;
 using HexagonalTest.Players;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Xml;
 using System.Xml.Serialization;
@@ -42,6 +43,11 @@ namespace GameMaster
                 throw new NullReferenceException($"configurations couldn't be parsed!");
             }
 
+            if (configurations.Any(c => c.GameBoardConfiguration is null))
+            {
+                throw new NullReferenceException($"configurations couldn't be parsed!");
+            }
+
             // Create a tournament manager for each game type.
             List<TournamentManager> tournamentManagers = new List<TournamentManager>();
 
@@ -68,12 +74,16 @@ namespace GameMaster
             }
 
             // Play each tournament.
-            List<TournamentResult> results = new List<TournamentResult>();
-            foreach (var tournament in tournamentManagers)
-            {
-                results.Add(tournament.PlayTournament());
-            }
 
+            List<TournamentResult> results = new List<TournamentResult>();
+            
+            for (int i = 0; i < 25; i++)
+            {
+                foreach (var tournament in tournamentManagers)
+                {
+                    results.Add(tournament.PlayTournament());
+                }
+            }
 
             // Save the results.
             TournamentResultDataMapperXml dataMapper = new TournamentResultDataMapperXml(OutputFolder);

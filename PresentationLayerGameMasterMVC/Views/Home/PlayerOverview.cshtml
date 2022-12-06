@@ -1,0 +1,18 @@
+﻿@using Entities;
+@model IEnumerable<Player>
+@{
+    ViewData["Title"] = "Player Overview";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Overview of players</h1>
+</div>
+
+<div>
+    <ul>
+        @foreach (Player player in Model)
+        {
+            <li>@player.Name - @Html.ActionLink("Go to profile", "Details", "Player", new {name = player.Name}, null)</li>
+        }
+    </ul>
+</div>

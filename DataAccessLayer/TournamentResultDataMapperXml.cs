@@ -118,7 +118,8 @@ namespace GameMaster.DataAccessLayer
                 matchResultDTOs.Add(new MatchResultDTO
                 {
                     GameResults = gameResultDTOs,
-                    Players = matchResult.GameResults.SelectMany(gr => gr.Players).Distinct().Select(p => p.Name).ToList()
+                    Players = matchResult.GameResults.SelectMany(gr => gr.Players).Distinct().Select(p => p.Name).ToList(),
+                    GameBoardConfig = ConvertToDTO(matchResult.GameBoardConfiguration)
                 });
             }
 
@@ -129,6 +130,36 @@ namespace GameMaster.DataAccessLayer
                 GameType = tournamentResult.GameType,
                 VersusMode = tournamentResult.VersusMode
             };
+        }
+
+        private GameBoardConfigDTO ConvertToDTO(GameBoardConfiguration gameBoardConfiguration)
+        {
+            switch (gameBoardConfiguration)
+            {
+                case TicTacToeGameBoardConfiguration ticTacToeConfiguration:
+                    return new TicTacToeGameBoardDTO
+                    {
+                        BoardSize = ticTacToeConfiguration.BoardSize
+                    };
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private GameBoardConfiguration ConvertFromDTO(GameBoardConfigDTO gameBoardConfiguration)
+        {
+            switch (gameBoardConfiguration)
+            {
+                case TicTacToeGameBoardDTO ticTacToeConfiguration:
+                    return new TicTacToeGameBoardConfiguration
+                    {
+                        BoardSize = ticTacToeConfiguration.BoardSize
+                    };
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         private TournamentResult ConvertFromDTO(TournamentResultDTO tournamentResultDTO)
@@ -153,7 +184,7 @@ namespace GameMaster.DataAccessLayer
 
                 }
 
-                matchResults.Add(new MatchResult(gameResults));
+                matchResults.Add(new MatchResult(gameResults, ConvertFromDTO(matchResultDTO.GameBoardConfig)));
             }
 
             return new TournamentResult(matchResults, tournamentResultDTO.DateTime, tournamentResultDTO.GameType, tournamentResultDTO.VersusMode);

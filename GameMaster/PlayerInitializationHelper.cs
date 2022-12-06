@@ -3,6 +3,7 @@ using GameMaster.Dodgeball;
 using GamePlayerInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +18,7 @@ namespace GameMaster
         /// <summary>
         /// Activator class for creating <see cref="IGamePlayer"/> instances
         /// </summary>
+        [DebuggerDisplay("PlayerName = {_user}")]
         public class PlayerActivator
         {
             private Assembly _assembly;

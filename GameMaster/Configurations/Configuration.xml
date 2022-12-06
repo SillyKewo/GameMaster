@@ -2,9 +2,13 @@
 <ArrayOfGameSetupConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<GameSetupConfiguration>
 		<GameType>TicTacToe</GameType>
+		<TicTacToeGameBoardConfiguration>
+			<BoardSize>3</BoardSize>
+		</TicTacToeGameBoardConfiguration>
 		<PlayerFolder>C:\Users\theke\Documents\playersTicTacToe</PlayerFolder>
-		<RoundsPerMatch>2</RoundsPerMatch>
+		<RoundsPerMatch>3</RoundsPerMatch>
 		<VersusMode>RoundRobin</VersusMode>
 		<TimeOutSec>1</TimeOutSec>
+		<PlayersPerGame>2</PlayersPerGame>
 	</GameSetupConfiguration>
 </ArrayOfGameSetupConfiguration>

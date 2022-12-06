@@ -2,12 +2,14 @@
 using GamePlayerInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GameMaster
 {
+    [DebuggerDisplay("Player = {Player}")]
     public class TicTacToePlayerWrapper : IGamePlayer
     {
         private ITicTacToePlayer _playerImplementation;

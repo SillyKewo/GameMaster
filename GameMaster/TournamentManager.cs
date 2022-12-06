@@ -45,7 +45,7 @@ namespace GameMaster
 
                 lock (this._lock)
                 {
-                    matchResults.Add(new MatchResult(gameResults));
+                    matchResults.Add(new MatchResult(gameResults, this._config.GameBoardConfiguration!));
                 }
             });
 
@@ -58,12 +58,18 @@ namespace GameMaster
             switch (this._config.VersusMode)
             {
                 case VersusMode.RoundRobin:
-                    for (int i = 0; i < this._playerActivators.Count - 1; i++)
+                    for (int i = 0; i < this._playerActivators.Count - (this._config.PlayersPerGame - 1); i++)
                     {
-                        for (int j = i+1; j < this._playerActivators.Count; j++)
+                        for (int j = i + (this._config.PlayersPerGame - 1); j < this._playerActivators.Count; j++)
                         {
-                            // TODO: Implement possibility of more than players than 2 per game!
-                            List<IGamePlayer> gamePlayers = new List<IGamePlayer>() { this._playerActivators[i].CreateNewPlayer(), this._playerActivators[j].CreateNewPlayer() };
+
+                            List<IGamePlayer> gamePlayers = new List<IGamePlayer>();
+                            gamePlayers.Add(this._playerActivators[i].CreateNewPlayer());
+
+                            for (int m = 0; m < this._config.PlayersPerGame - 1; m++)
+                            {
+                                gamePlayers.Add(this._playerActivators[j+m].CreateNewPlayer());
+                            }
 
                             List<IGame> games = new List<IGame>();
 

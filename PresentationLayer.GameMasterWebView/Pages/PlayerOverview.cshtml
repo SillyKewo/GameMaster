@@ -1,0 +1,20 @@
+﻿@page
+@using Entities;
+@model PlayerOverviewModel
+@{
+    ViewData["Title"] = "Player Overview";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Overview of players</h1>
+</div>
+
+<div>
+    <ul>
+        @foreach (Player player in Model.Players)
+        {
+            <li>@player.Name</li>
+        }
+    </ul>
+</div>
+

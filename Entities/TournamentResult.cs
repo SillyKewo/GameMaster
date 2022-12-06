@@ -14,6 +14,7 @@ namespace Entities
             this.TournamentHeldAt = nowUtc;
             this.GameType = gameType;
             this.VersusMode = versusMode;
+            this.PlayerList = matchResults.SelectMany(m => m.Players).Distinct().ToList();
         }
 
         public List<MatchResult> MatchResults { get; }
@@ -24,15 +25,19 @@ namespace Entities
 
         public VersusMode VersusMode { get; }
 
+        /// <summary>
+        /// Gets the list of all players participating in the tournament.
+        /// </summary>
+        public List<Player> PlayerList { get; }
+
         public string TournamentOverviewDescription()
         {
-            return $"Tournament for gametype:{this.GameType} with VersusMode:{this.VersusMode} held at:{this.TournamentHeldAt} with {this.MatchResults.Count} matches";
+            return $"Tournament for gametype: {this.GameType} with VersusMode: {this.VersusMode} held at: {this.TournamentHeldAt} with {this.MatchResults.Count} matches";
         }
 
         public string GetTournamentResultsString()
         {
             return string.Empty;
         }
-
     }
 }

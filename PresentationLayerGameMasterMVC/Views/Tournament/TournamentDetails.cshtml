@@ -1,0 +1,66 @@
+﻿@using Entities;
+@model TournamentResultViewerModel
+@{
+    ViewData["Title"] = "Player Overview";
+    var boardStatesIndex = new int[Model.MatchResults.Count];
+}
+
+<div>
+    <h1>@Model.TournamentResult.GameType Tournament</h1>
+    <h3>Held at @Model.TournamentResult.TournamentHeldAt</h3>
+    <p>Total number of matches: @Model.TournamentResult.MatchResults.Count</p>
+</div>
+
+
+<div>
+    <p>Matches:</p>
+    <br />
+
+    @foreach (MatchResultViewerModel matchResult in Model.MatchResults)
+    {
+        <p>Number of games played: @matchResult.GameResults.Count</p>
+
+        @foreach (GameResultViewerModel gameResult in matchResult.GameResults)
+        {
+            @if (gameResult.GameReplayer is not null)
+            {
+                <div style="border:1px solid black" class="align-content-center">
+                    @for (int i = 0; i < gameResult.GameReplayer!.GetMoveCount(); i++)
+                    {
+                        var divStyle = i == 0 ? string.Empty : "display:none;";
+
+                        <div style="@divStyle" class="align-content-center">
+                            @Html.Raw(gameResult.GameReplayer?.GetHtmlBoardState(i))
+
+                            @if (i != 0)
+                            {
+                                <button class="back">back</button>
+                            }
+
+                            @if (i != gameResult.GameReplayer!.GetMoveCount() - 1)
+                            {
+                                <button class="next">Next</button>
+                            }
+
+                        </div>
+                    }
+                    <br />
+                </div>
+            }
+            <br />
+        }
+    }
+</div>
+
+@section scripts {
+    <script>
+
+        $('.next').click(function(){
+            $(this).parent().hide().next().show();//hide parent and show next
+        });
+
+        $('.back').click(function(){
+            $(this).parent().hide().prev().show();//hide parent and show previous
+        });
+    </script>
+}
